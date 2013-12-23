@@ -1,0 +1,31 @@
+{% extends '../../../views/base.swig.html' %}
+{% block content %}
+<h2>Account Details</h2>
+<form method="POST" role="form">
+    <input type="hidden" name="_csrf" value="{{ token }}" />
+    <h3>Personal Details</h3>
+    <p>As a member of the South London Makerspace you are required to keep up to date your full name and address. </p>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name" value="{{ name }}" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="address">Address</label>
+        <textarea name="address" id="address" class="form-control" rows="5">{{ address }}</textarea>
+    </div>
+    <h3>Persona</h3>
+    <p><a href="https://login.persona.org/about">Persona</a> is an authorisation system provided by Mozilla. <a href="https://login.persona.org/">Manage Persona</a> <small><a href="https://support.mozilla.org/en-US/kb/how-do-i-manage-my-persona-account">(help)</a></small></p>
+    <p>Be aware that changing your e-mail is not currently supported and you may lose access to your account.</p>
+    <h3>Access Card</h3>
+    <p>To access South London Makerspace you will need to link an RFID enabled access card to your account. Most people have this card already on their person in the form of an Oyster card, a contactless payment card or a work ID card or many other types of RFID enabled cards can be used.</p>
+    <p>You can manually enter the card ID below using an RFID reading device. Enter the ID with no spaces or separating characters.</p>
+    <div class="form-group">
+        <label for="card_id">Card ID</label>
+        <input type="text" name="card_id" id="card_id" value="{{ card_id }}" class="form-control" placeholder="123456AB">
+    </div>
+    <h3>Direct Debit</h3>
+    <p>To become a full member of the South London Makerspace a monthly payment must be made. As we are just starting up we hope you can put in whatever you can afford though long term we would like you to pay what you feel you get out of the space.</p>
+    <p>We use a service called GoCardless to handle the management of the payments for us.</p>
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>
+{% endblock %}
