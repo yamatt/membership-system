@@ -4,18 +4,19 @@
 <form method="POST" role="form">
     <input type="hidden" name="_csrf" value="{{ token }}" />
     <h3>Personal Details</h3>
-    <p>As a member of the South London Makerspace you are required to keep up to date your full name and address. </p>
+    <p>As a member of the South London Makerspace <a href="http://www.legislation.gov.uk/ukpga/2006/46/part/8/chapter/2/crossheading/general">you are required to keep up to date your full name and address</a>. </p>
     <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" name="name" id="name" value="{{ name }}" class="form-control">
+        <input type="text" name="name" id="name" value="{{ user.name }}" class="form-control">
     </div>
     <div class="form-group">
         <label for="address">Address</label>
-        <textarea name="address" id="address" class="form-control" rows="5">{{ address }}</textarea>
+        <textarea name="address" id="address" class="form-control" rows="5">{{ user.address }}</textarea>
     </div>
     <h3>Persona</h3>
     <p><a href="https://login.persona.org/about">Persona</a> is an authorisation system provided by Mozilla. <a href="https://login.persona.org/">Manage Persona</a> <small><a href="https://support.mozilla.org/en-US/kb/how-do-i-manage-my-persona-account">(help)</a></small></p>
     <p>Be aware that changing your e-mail is not currently supported and you may lose access to your account.</p>
+    <p>Your current e-mail address in use is: <b>{{ email }}</b></p>
     <h3>Access Card</h3>
     <p>To access South London Makerspace you will need to link an RFID enabled access card to your account. Most people have this card already on their person in the form of an Oyster card, a contactless payment card or a work ID card or many other types of RFID enabled cards can be used.</p>
     <p>You can manually enter the card ID below using an RFID reading device. Enter the ID with no spaces or separating characters.</p>
@@ -26,6 +27,54 @@
     <h3>Direct Debit</h3>
     <p>To become a full member of the South London Makerspace a monthly payment must be made. As we are just starting up we hope you can put in whatever you can afford though long term we would like you to pay what you feel you get out of the space.</p>
     <p>We use a service called GoCardless to handle the management of the payments for us.</p>
+    <div class="form-inline">
+        <label for="subscription">Amount</label>
+        <input type="number" id="subscription" name="subscription" placeholder="15.00" />
+        <input type="submit" class="btn btn-default" name="subscription" value="Become Member" />
+    </div>
     <button type="submit" class="btn btn-primary">Update</button>
 </form>
+{% endblock %}
+
+{% block js %}
+<script src="https://login.persona.org/include.js"></script>
+<script>
+var login_button = document.querySelector("#persona-login");
+if (login_button) {
+  login_button.addEventListener("click", function() {
+        navigator.id.request();
+    }, false);
+}
+
+navigator.id.watch({
+  loggedInUser: {% if email %}'{{ email }}'{% else %}null{% endif %},
+  onlogin: function(assertion) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/auth/verify", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.addEventListener("loadend", function(e) {
+      var data = JSON.parse(this.responseText);
+      if (data && data.status === "okay") {
+        console.log("You have been logged in as: " + data.email);
+        window.location.reload(true);
+      }
+    }, false);
+
+    xhr.send(JSON.stringify({
+      assertion: assertion
+    }));
+  },
+  onlogout: function() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/auth/logout", true);
+    xhr.addEventListener("loadend", function(e) {
+      console.log("User has logged out.");
+      window.location.reload(true);
+    });
+    xhr.send();
+  }
+});
+
+
+</script>
 {% endblock %}
