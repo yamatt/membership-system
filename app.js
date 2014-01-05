@@ -1,11 +1,13 @@
 var express = require('express');
 var _ = require("underscore");
+var GoCardless = require('gocardless')
 
 module.exports = {
     "title": "Membership",
     "name": "membership",
     "app": function(config, db, site) {
         var app = express();
+        var gc = GoCardless(config.gocardless);
         
         _.extend(app.locals, site.locals);
         
@@ -25,8 +27,64 @@ module.exports = {
             }
         });
         
+        app.get('/subscription-confirmation', function(req, res) {
+            gocardless.confirmResource(req.query, function(err) {
+                if (err) {
+                    // better error messages
+                    return res.send(402);
+                }
+                else {
+                    if (req.query.resource_type == "subscription") {
+                        // flash success message
+                        var user = res.locals.user;
+                        user.gc_subscription = resource_id;
+                        user.save(function (err, user) {
+                            // must handle validation errors
+                            res.render("membership", {user: user});
+                        });
+                    }
+                    else {
+                        // something weird has happened.
+                    }
+                }
+          });
+        });
+        
         app.post("/", function (req, res) {
-            if (res.locals.user) {
+            var user = res.locals.user;
+            if ((user) && (req.body.subscribe == "Become Member")) {
+                var url = gc.subscription.newUrl({
+                  amount: res.body.subscription,
+                  interval_length: '1',
+                  interval_unit: 'month',
+                  name: 'South London Makerspace Membership',
+                  description: 'Monthly membership payment for South London Makerspace.'
+                });
+
+                res.redirect(url);
+            }
+            if ((user) && (req.body.subscribe == "Cancel Payment") && (user.gc_subscription)) {
+                gc.subscription.cancel({
+                  id: user.gc_subscription
+                },
+                function(err, response, body) {
+                    if (!err) {
+                        var r = JSON.parse(body);
+                        if (r.status == "cancelled") {
+                          user.gc_subscription = null
+                          user.save(function (err, user) {
+                              res.render("membership", {user: user});
+                          });
+                        }
+                    }
+                    else {
+                        console.log("something went very wrong when cancelling a subscription.");
+                    }
+                });
+            }
+            
+            
+            if (user) {
                 // update user
                 var user = res.locals.user;
                 user.name = req.body.name;

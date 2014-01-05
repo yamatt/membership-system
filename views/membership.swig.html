@@ -26,12 +26,21 @@
     </div>
     <h3>Direct Debit</h3>
     <p>To become a full member of the South London Makerspace a monthly payment must be made. As we are just starting up we hope you can put in whatever you can afford though long term we would like you to pay what you feel you get out of the space.</p>
-    <p>We use a service called GoCardless to handle the management of the payments for us.</p>
+    <p>We use a service called <a href="https://gocardless.com/">GoCardless</a> to handle the management of the payments for us. They will direct you through the process of setting up a direct debit. This will be used to debit money from your account on a monthly basis.</p>
+    {% if user.gc_subscription %}
+        {% if user.last_payment %}
+            <p>Thank you for your payment. Your next payment is due: <b>{{ user.next_payment() }}</b></p>
+        {% else %}
+            <p>Your subscription has been set up. Waiting for payment. This may take up to a week. If you can't wait that long please contact one of the trustees.</p>
+        {% endif %}
+        <input type="submit" class="btn btn-warning" name="subscribe" value="Cancel Payment" />
+    {% else %}
     <div class="form-inline">
-        <label for="subscription">Amount</label>
-        <input type="number" id="subscription" name="subscription" placeholder="15.00" />
-        <input type="submit" class="btn btn-default" name="subscription" value="Become Member" />
+        <label for="subscription">Amount (£)</label>
+        <input type="number" id="subscription" name="subscription" placeholder="15.00" value="15.00" />
+        <input type="submit" class="btn btn-default" name="subscribe" value="Become Member" />
     </div>
+    {% endif %}
     <button type="submit" class="btn btn-primary">Update</button>
 </form>
 {% endblock %}
