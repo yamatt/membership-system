@@ -92,6 +92,7 @@ module.exports = {
                 user.card_id = req.body.card_id;
                 
                 user.save(function (err, user) {
+                    // must handle validation errors
                     res.render("membership", {user: user});
                 });
             }
@@ -104,6 +105,7 @@ module.exports = {
                     card_id: req.body.card_id
                 },
                 function (err, user) {
+                    // must handle validation errors
                     res.render("membership", {user: user});
                 });
             }
