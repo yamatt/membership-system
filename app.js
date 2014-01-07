@@ -54,7 +54,7 @@ module.exports = {
             var user = res.locals.user;
             if ((user) && (req.body.subscribe == "Become Member")) {
                 var url = gc.subscription.newUrl({
-                  amount: res.body.subscription,
+                  amount: req.body.subscription,
                   interval_length: '1',
                   interval_unit: 'month',
                   name: 'South London Makerspace Membership',
