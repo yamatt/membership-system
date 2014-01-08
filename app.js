@@ -28,7 +28,7 @@ module.exports = {
         });
         
         app.get('/subscription-confirmation', function(req, res) {
-            gocardless.confirmResource(req.query, function(err) {
+            gc.confirmResource(req.query, function(err) {
                 if (err) {
                     // better error messages
                     return res.send(402);
