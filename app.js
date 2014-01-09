@@ -40,7 +40,9 @@ module.exports = {
                         user.gc_subscription = req.query.resource_id;
                         user.save(function (err, user) {
                             // must handle validation errors
-                            res.render("membership", {user: user});
+                            if (!err) {
+                                res.render("membership", {user: user});
+                            }
                         });
                     }
                     else {
@@ -73,7 +75,9 @@ module.exports = {
                         if (r.status == "cancelled") {
                           user.gc_subscription = null
                           user.save(function (err, user) {
-                              res.render("membership", {user: user});
+                              if (!err) {
+                                res.render("membership", {user: user});
+                            }
                           });
                         }
                     }
