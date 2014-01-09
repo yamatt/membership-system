@@ -37,7 +37,7 @@ module.exports = {
                     if (req.query.resource_type == "subscription") {
                         // flash success message
                         var user = res.locals.user;
-                        user.gc_subscription = resource_id;
+                        user.gc_subscription = req.query.resource_id;
                         user.save(function (err, user) {
                             // must handle validation errors
                             res.render("membership", {user: user});
