@@ -45,7 +45,7 @@ module.exports = {
                         user.save(function (err, user) {
                             // must handle validation errors
                             if (!err) {
-                                res.render("membership", {user: user});
+                                res.redirect("/membership");
                             }
                         });
                     }
