@@ -17,6 +17,10 @@ module.exports = {
             res.locals.token = req.csrfToken();
             next();
         });
+        
+        app.locals.data = {
+            page_title: "Membership"
+        }
 
         app.get('/', function(req, res){
             if (req.session.email) {
