@@ -80,12 +80,12 @@ module.exports = {
                     if (!err) {
                         var r = JSON.parse(body);
                         if (r.status == "cancelled") {
-                          user.gc_subscription = null
-                          user.save(function (err, user) {
-                              if (!err) {
-                                res.render("membership", {user: user});
-                            }
-                          });
+                            user.cancel_subscription();
+                            user.save(function (err, user) {
+                                if (!err) {
+                                    res.render("membership", {user: user});
+                                }
+                            });
                         }
                     }
                     else {
