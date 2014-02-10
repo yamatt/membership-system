@@ -33,7 +33,7 @@
         {% if user.last_payment %}
     <p>Thank you for your payment. Your next payment is due by: <b>{{ user.next_payment()|date("d M Y") }}</b> <input type="submit" class="btn btn-warning" name="subscribe" value="Cancel Payment" /></p>
         {% else %}
-    <p>Your subscription has been set up. <b>Waiting for payment. This may take up to a week.</b> If you can't wait that long please contact one of the trustees. <input type="submit" class="btn btn-warning" name="subscribe" value="Cancel Payment" /></p>
+    <p>Your subscription has been set up. <b>Waiting for payment. This may take up to a week.</b>  <input type="submit" class="btn btn-warning" name="subscribe" value="Cancel Payment" /></p>
         {% endif %}
     </p>
     {% else %}
