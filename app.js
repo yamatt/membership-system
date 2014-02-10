@@ -64,7 +64,10 @@ module.exports = {
                   interval_length: '1',
                   interval_unit: 'month',
                   name: 'South London Makerspace Membership',
-                  description: 'Monthly membership payment for South London Makerspace.'
+                  description: 'Monthly membership payment for South London Makerspace.',
+                  user: {
+                      "email": user.email
+                  }
                 });
 
                 res.redirect(url);
