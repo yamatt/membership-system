@@ -13,6 +13,7 @@
         <label for="address">Address</label>
         <textarea name="address" id="address" class="form-control" rows="5">{{ user.address }}</textarea>
     </div>
+    <button type="submit" class="btn btn-primary">Update</button>
     <h3>Persona</h3>
     <p><a href="https://login.persona.org/about">Persona</a> is an authorisation system provided by Mozilla. <a href="https://login.persona.org/">Manage Persona</a> <small><a href="https://support.mozilla.org/en-US/kb/how-do-i-manage-my-persona-account">(help)</a></small></p>
     <p>Be aware that changing your e-mail is not currently supported and you may lose access to your account.</p>
@@ -24,6 +25,7 @@
         <label for="card_id">Card ID</label>
         <input type="text" name="card_id" id="card_id" value="{{ card_id }}" class="form-control" placeholder="123456AB">
     </div>
+    <button type="submit" class="btn btn-primary">Update</button>
     <h3>Direct Debit</h3>
     <p>To become a full member of the South London Makerspace a monthly payment must be made. As we are just starting up we hope you can put in whatever you can afford though long term we would like you to pay what you feel you get out of the space.</p>
     <p>We use a service called <a href="https://gocardless.com/">GoCardless</a> to handle the management of the payments for us. They will direct you through the process of setting up a direct debit. This will be used to debit money from your account on a monthly basis.</p>
@@ -31,7 +33,7 @@
         {% if user.last_payment %}
     <p>Thank you for your payment. Your next payment is due by: <b>{{ user.next_payment()|date("d M Y") }}</b> <input type="submit" class="btn btn-warning" name="subscribe" value="Cancel Payment" /></p>
         {% else %}
-    <p>Your subscription has been set up. <b>Waiting for payment. This may take up to a week.</b> If you can't wait that long please contact one of the trustees. <input type="submit" class="btn btn-warning" name="subscribe" value="Cancel Payment" /></p>
+    <p>Your subscription has been set up. <b>Waiting for payment. This may take up to a week.</b>  <input type="submit" class="btn btn-warning" name="subscribe" value="Cancel Payment" /></p>
         {% endif %}
     </p>
     {% else %}
@@ -41,9 +43,7 @@
         <input type="submit" class="btn btn-default" name="subscribe" value="Become Member" />
     </div>
     {% endif %}
-    <p>
-        <button type="submit" class="btn btn-primary">Update</button>
-    </p>
+    <p></p>
 </form>
 {% endblock %}
 

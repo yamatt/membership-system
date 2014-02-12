@@ -64,7 +64,10 @@ module.exports = {
                   interval_length: '1',
                   interval_unit: 'month',
                   name: 'South London Makerspace Membership',
-                  description: 'Monthly membership payment for South London Makerspace.'
+                  description: 'Monthly membership payment for South London Makerspace.',
+                  user: {
+                      "email": user.email
+                  }
                 });
 
                 res.redirect(url);
@@ -77,12 +80,12 @@ module.exports = {
                     if (!err) {
                         var r = JSON.parse(body);
                         if (r.status == "cancelled") {
-                          user.gc_subscription = null
-                          user.save(function (err, user) {
-                              if (!err) {
-                                res.render("membership", {user: user});
-                            }
-                          });
+                            user.cancel_subscription();
+                            user.save(function (err, user) {
+                                if (!err) {
+                                    res.render("membership", {user: user});
+                                }
+                            });
                         }
                     }
                     else {
