@@ -58,12 +58,12 @@ module.exports = {
                         }
                         else {
                             res.locals.flash("danger", "Subscription failed.", "Your subscription from GoCardless could not be created as you are not logged in to this site. You may need to cancel your subscription with GoCardless and recreate it from this site making sure you are logged in.");
-                            console.log("User was not logged in when creating subscription: " + req.query.resource_id;
+                            console.log("User was not logged in when creating subscription: " + req.query.resource_id);
                         }
                     }
                     else {
                         res.locals.flash("success", "Subscription failed.", "Created bill appears to be something other than a subscription.");
-                        console.log("User '" + user + "'attemped to create something other than a subscription: " + req.query.resource_id;
+                        console.log("User '" + user + "'attemped to create something other than a subscription: " + req.query.resource_id);
                     }
                     res.redirect("/membership");
                 }
@@ -133,7 +133,7 @@ module.exports = {
                         user.save(function (err, user) {
                             // must handle validation errors
                             if (!err) {
-                                res.locals.flash("success", "Updated." "Member account updated successfully.");
+                                res.locals.flash("success", "Updated.", "Member account updated successfully.");
                                 res.render("membership", {user: user});
                             }
                             else {
@@ -141,9 +141,10 @@ module.exports = {
                                 console.log("Data: " + user);
                                 res.send(500, "Database error. This has been logged but please report the issue with the code SLME003.");
                             }
-                    });
+                        });
+                    }
                     else {
-                        res.locals.flash("danger", "Update failed." "Member information could not be saved because of errors.");
+                        res.locals.flash("danger", "Update failed.", "Member information could not be saved because of errors.");
                         res.render("membership", {user: user, errors: user.errors});
                     }
                 });
@@ -158,11 +159,11 @@ module.exports = {
                 },
                 function (err, user) {
                     if (!err) {
-                        res.locals.flash("success", "Account created." "Thanks! You can now create a payment subscription.");
+                        res.locals.flash("success", "Account created.", "Thanks! You can now create a payment subscription.");
                         res.render("membership", {user: user});
                     }
                     else {
-                        res.locals.flash("danger", "Account creation failed." "Member information could not be created because of errors.");
+                        res.locals.flash("danger", "Account creation failed.", "Member information could not be created because of errors.");
                         res.render("membership", {user: user, errors: user.errors});
                     }
                 });
