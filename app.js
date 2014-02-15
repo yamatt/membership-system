@@ -2,6 +2,8 @@ var express = require('express'),
     _ = require("underscore"),
     GoCardless = require('gocardless');
 
+var MIN_SUBSCRIPTION = 5.00; // TODO: configuration file
+
 module.exports = {
     "title": "Membership",
     "name": "membership",
@@ -59,18 +61,22 @@ module.exports = {
         app.post("/", function (req, res) {
             var user = res.locals.user;
             if ((user) && (req.body.subscribe == "Become Member")) {
-                var url = gc.subscription.newUrl({
-                  amount: req.body.subscription,
-                  interval_length: '1',
-                  interval_unit: 'month',
-                  name: 'South London Makerspace Membership',
-                  description: 'Monthly membership payment for South London Makerspace.',
-                  user: {
-                      "email": user.email
-                  }
-                });
-
-                res.redirect(url);
+                if (parseFloat(req.body.subscription) >= MIN_SUBSCRIPTION) {
+                    var url = gc.subscription.newUrl({
+                      amount: req.body.subscription,
+                      interval_length: '1',
+                      interval_unit: 'month',
+                      name: 'South London Makerspace Membership',
+                      description: 'Monthly membership payment for South London Makerspace.',
+                      user: {
+                          "email": user.email
+                      }
+                    });
+                    res.redirect(url);
+                }
+                else {
+                    res.locals.flash("warning", "Subscription failed.", "Please enter a value greater than £" + MIN_SUBSCRIPTION + "."); // TODO: configurable currency symbol
+                }
             }
             if ((user) && (req.body.subscribe == "Cancel Payment") && (user.gc_subscription)) {
                 gc.subscription.cancel({
