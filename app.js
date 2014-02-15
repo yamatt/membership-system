@@ -1,6 +1,6 @@
-var express = require('express');
-var _ = require("underscore");
-var GoCardless = require('gocardless')
+var express = require('express'),
+    _ = require("underscore"),
+    GoCardless = require('gocardless');
 
 module.exports = {
     "title": "Membership",
