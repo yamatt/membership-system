@@ -1,6 +1,8 @@
-var express = require('express');
-var _ = require("underscore");
-var GoCardless = require('gocardless')
+var express = require('express'),
+    _ = require("underscore"),
+    GoCardless = require('gocardless');
+
+var MIN_SUBSCRIPTION = 5.00; // TODO: configuration file
 
 module.exports = {
     "title": "Membership",
@@ -27,11 +29,13 @@ module.exports = {
                 res.render("membership");
             }
             else {
+                res.locals.flash("danger", "Not logged in.", "Please log in to access the members page.");
                 res.redirect("/"); // could probably be handled better or elsewhere
             }
         });
         
         app.get('/subscription-confirmation', function(req, res) {
+            var user = res.locals.user;
             gc.confirmResource(req.query, function(err) {
                 if (err) {
                     // better error messages
@@ -39,19 +43,29 @@ module.exports = {
                 }
                 else {
                     if (req.query.resource_type == "subscription") {
-                        // flash success message
-                        var user = res.locals.user;
-                        user.gc_subscription = req.query.resource_id;
-                        user.save(function (err, user) {
-                            // must handle validation errors
-                            if (!err) {
-                                res.redirect("/membership");
-                            }
-                        });
+                        if (user) {
+                            user.gc_subscription = req.query.resource_id;
+                            user.save(function (err, user) {
+                                if (!err) {
+                                    res.locals.flash("success", "Subscription created.", "Your subscription from GoCardless has been created. Waiting for payment.");
+                                }
+                                else {
+                                    console.log("Could not save entry because: " + err);
+                                    console.log("Data: " + user);
+                                    res.send(500, "Database error. This has been logged but please report the issue with the code SLME001");
+                                }
+                            });
+                        }
+                        else {
+                            res.locals.flash("danger", "Subscription failed.", "Your subscription from GoCardless could not be created as you are not logged in to this site. You may need to cancel your subscription with GoCardless and recreate it from this site making sure you are logged in.");
+                            console.log("User was not logged in when creating subscription: " + req.query.resource_id);
+                        }
                     }
                     else {
-                        // something weird has happened.
+                        res.locals.flash("success", "Subscription failed.", "Created bill appears to be something other than a subscription.");
+                        console.log("User '" + user + "'attemped to create something other than a subscription: " + req.query.resource_id);
                     }
+                    res.redirect("/membership");
                 }
           });
         });
@@ -59,18 +73,22 @@ module.exports = {
         app.post("/", function (req, res) {
             var user = res.locals.user;
             if ((user) && (req.body.subscribe == "Become Member")) {
-                var url = gc.subscription.newUrl({
-                  amount: req.body.subscription,
-                  interval_length: '1',
-                  interval_unit: 'month',
-                  name: 'South London Makerspace Membership',
-                  description: 'Monthly membership payment for South London Makerspace.',
-                  user: {
-                      "email": user.email
-                  }
-                });
-
-                res.redirect(url);
+                if (parseFloat(req.body.subscription) >= MIN_SUBSCRIPTION) {
+                    var url = gc.subscription.newUrl({
+                      amount: req.body.subscription,
+                      interval_length: '1',
+                      interval_unit: 'month',
+                      name: 'South London Makerspace Membership',
+                      description: 'Monthly membership payment for South London Makerspace.',
+                      user: {
+                          "email": user.email
+                      }
+                    });
+                    res.redirect(url);
+                }
+                else {
+                    res.locals.flash("warning", "Subscription failed.", "Please enter a value greater than £" + MIN_SUBSCRIPTION + "."); // TODO: configurable currency symbol
+                }
             }
             if ((user) && (req.body.subscribe == "Cancel Payment") && (user.gc_subscription)) {
                 gc.subscription.cancel({
@@ -83,13 +101,21 @@ module.exports = {
                             user.cancel_subscription();
                             user.save(function (err, user) {
                                 if (!err) {
+                                    res.locals.flash("warning", "Subscription cancelled.", "Your subscription has been cancelled and your account updated.");
                                     res.render("membership", {user: user});
                                 }
+                                else {
+                                    console.log("Could not save entry because: " + err);
+                                    console.log("Data: " + user);
+                                    res.send(500, "Database error. This has been logged but please report the issue with the code SLME002.");
+                                }
                             });
+                            console.log("Subscription cancelled for user: " + user);
                         }
                     }
                     else {
-                        console.log("something went very wrong when cancelling a subscription.");
+                        res.locals.flash("danger", "Subscription cancel failed.", "Your subscription has been cancelled could not be cancelled possibly due to a failure on GoCardless's side.");
+                        console.log("something went very wrong when cancelling a subscription  for user: " + user);
                     }
                 });
             }
@@ -102,9 +128,25 @@ module.exports = {
                 user.address = req.body.address;
                 user.card_id = req.body.card_id;
                 
-                user.save(function (err, user) {
-                    // must handle validation errors
-                    res.render("membership", {user: user});
+                user.isValid(function (valid) {
+                    if (valid) {
+                        user.save(function (err, user) {
+                            // must handle validation errors
+                            if (!err) {
+                                res.locals.flash("success", "Updated.", "Member account updated successfully.");
+                                res.render("membership", {user: user});
+                            }
+                            else {
+                                console.log("Could not save entry because: " + err);
+                                console.log("Data: " + user);
+                                res.send(500, "Database error. This has been logged but please report the issue with the code SLME003.");
+                            }
+                        });
+                    }
+                    else {
+                        res.locals.flash("danger", "Update failed.", "Member information could not be saved because of errors.");
+                        res.render("membership", {user: user, errors: user.errors});
+                    }
                 });
             }
             else {
@@ -116,8 +158,14 @@ module.exports = {
                     card_id: req.body.card_id
                 },
                 function (err, user) {
-                    // must handle validation errors
-                    res.render("membership", {user: user});
+                    if (!err) {
+                        res.locals.flash("success", "Account created.", "Thanks! You can now create a payment subscription.");
+                        res.render("membership", {user: user});
+                    }
+                    else {
+                        res.locals.flash("danger", "Account creation failed.", "Member information could not be created because of errors.");
+                        res.render("membership", {user: user, errors: user.errors});
+                    }
                 });
             }
         });
