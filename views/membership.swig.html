@@ -23,7 +23,7 @@
     <p>You can manually enter the card ID below using an RFID reading device. Enter the ID with no spaces or separating characters.</p>
     <div class="form-group">
         <label for="card_id">Card ID</label>
-        <input type="text" name="card_id" id="card_id" value="{{ card_id }}" class="form-control" placeholder="123456AB">
+        <input type="text" name="card_id" id="card_id" value="{{ user.card_id }}" class="form-control" placeholder="123456AB">
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
     <h3>Direct Debit</h3>
