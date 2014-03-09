@@ -23,7 +23,7 @@
     <p>You can manually enter the card ID below using an RFID reading device. Enter the ID with no spaces or separating characters.</p>
     <div class="form-group">
         <label for="card_id">Card ID</label>
-        <input type="text" name="card_id" id="card_id" value="{{ card_id }}" class="form-control" placeholder="123456AB">
+        <input type="text" name="card_id" id="card_id" value="{{ user.card_id }}" class="form-control" placeholder="123456AB">
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
     <h3>Direct Debit</h3>
@@ -31,7 +31,11 @@
     <p>We use a service called <a href="https://gocardless.com/">GoCardless</a> to handle the management of the payments for us. They will direct you through the process of setting up a direct debit. This will be used to debit money from your account on a monthly basis.</p>
     {% if user.gc_subscription %}
         {% if user.last_payment %}
-    <p>Thank you for your payment. Your next payment is due by: <b>{{ user.next_payment()|date("d M Y") }}</b> <input type="submit" class="btn btn-warning" name="subscribe" value="Cancel Payment" /></p>
+            {% if user.last_payment > now %}
+    <p>Thank you for your payment. To continue your membership your next payment must be received before: <b>{{ user.next_payment()|date("d M Y") }}</b> <input type="submit" class="btn btn-warning" name="subscribe" value="Cancel Payment" /></p>
+            {% else %}
+    <p>Awaiting your next payment. <b>Your membership is currently suspended.</b><input type="submit" class="btn btn-warning" name="subscribe" value="Cancel Payment" /></p>
+            {% endif %}
         {% else %}
     <p>Your subscription has been set up. <b>Waiting for payment. This may take up to a week.</b>  <input type="submit" class="btn btn-warning" name="subscribe" value="Cancel Payment" /></p>
         {% endif %}

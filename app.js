@@ -2,8 +2,6 @@ var express = require('express'),
     _ = require("underscore"),
     GoCardless = require('gocardless');
 
-var MIN_SUBSCRIPTION = 5.00; // TODO: configuration file
-
 module.exports = {
     "title": "Membership",
     "name": "membership",
@@ -73,7 +71,7 @@ module.exports = {
         app.post("/", function (req, res) {
             var user = res.locals.user;
             if ((user) && (req.body.subscribe == "Become Member")) {
-                if (parseFloat(req.body.subscription) >= MIN_SUBSCRIPTION) {
+                if (parseFloat(req.body.subscription) >= config.gocardless.minimum) {
                     var url = gc.subscription.newUrl({
                       amount: req.body.subscription,
                       interval_length: '1',
@@ -87,7 +85,7 @@ module.exports = {
                     res.redirect(url);
                 }
                 else {
-                    res.locals.flash("warning", "Subscription failed.", "Please enter a value greater than £" + MIN_SUBSCRIPTION + "."); // TODO: configurable currency symbol
+                    res.locals.flash("warning", "Subscription failed.", "Please enter a value greater than £" + config.gocardless.minimum + "."); // TODO: configurable currency symbol
                 }
             }
             if ((user) && (req.body.subscribe == "Cancel Payment") && (user.gc_subscription)) {
@@ -115,7 +113,7 @@ module.exports = {
                     }
                     else {
                         res.locals.flash("danger", "Subscription cancel failed.", "Your subscription has been cancelled could not be cancelled possibly due to a failure on GoCardless's side.");
-                        console.log("something went very wrong when cancelling a subscription  for user: " + user);
+                        console.log("something went very wrong when cancelling a subscription for user: " + user);
                     }
                 });
             }
