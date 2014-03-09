@@ -113,7 +113,7 @@ module.exports = {
                     }
                     else {
                         res.locals.flash("danger", "Subscription cancel failed.", "Your subscription has been cancelled could not be cancelled possibly due to a failure on GoCardless's side.");
-                        console.log("something went very wrong when cancelling a subscription  for user: " + user);
+                        console.log("something went very wrong when cancelling a subscription for user: " + user);
                     }
                 });
             }
