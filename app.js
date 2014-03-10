@@ -46,6 +46,7 @@ module.exports = {
                             user.save(function (err, user) {
                                 if (!err) {
                                     res.locals.flash("success", "Subscription created.", "Your subscription from GoCardless has been created. Waiting for payment.");
+                                    res.redirect("/membership");
                                 }
                                 else {
                                     console.log("Could not save entry because: " + err);
@@ -57,13 +58,14 @@ module.exports = {
                         else {
                             res.locals.flash("danger", "Subscription failed.", "Your subscription from GoCardless could not be created as you are not logged in to this site. You may need to cancel your subscription with GoCardless and recreate it from this site making sure you are logged in.");
                             console.log("User was not logged in when creating subscription: " + req.query.resource_id);
+                            res.redirect("/membership");
                         }
                     }
                     else {
                         res.locals.flash("success", "Subscription failed.", "Created bill appears to be something other than a subscription.");
                         console.log("User '" + user + "'attemped to create something other than a subscription: " + req.query.resource_id);
+                        res.redirect("/membership");
                     }
-                    res.redirect("/membership");
                 }
           });
         });
