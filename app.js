@@ -88,7 +88,7 @@ module.exports = {
                     res.locals.flash("warning", "Subscription failed.", "Please enter a value greater than £" + config.gocardless.minimum + "."); // TODO: configurable currency symbol
                 }
             }
-            if ((user) && (req.body.subscribe == "Cancel Payment") && (user.gc_subscription)) {
+            else if ((user) && (req.body.subscribe == "Cancel Payment") && (user.gc_subscription)) {
                 gc.subscription.cancel({
                   id: user.gc_subscription
                 },
@@ -117,9 +117,7 @@ module.exports = {
                     }
                 });
             }
-            
-            
-            if (user) {
+            else if (user) {
                 // update user
                 var user = res.locals.user;
                 user.name = req.body.name;
