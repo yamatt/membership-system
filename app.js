@@ -135,7 +135,7 @@ module.exports = {
             }
             else if ((user) && (req.body.donate == "Pay")) {
                 if (parseFloat(req.body.donation)) {
-                    var url = gc.subscription.newUrl({
+                    var url = gc.bill.newUrl({
                       amount: req.body.donation,
                       interval_length: '1',
                       interval_unit: 'month',
