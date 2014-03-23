@@ -16,7 +16,15 @@
     <button type="submit" class="btn btn-primary">Update</button>
     
     <h3>Donations Direct Debit</h3>
-    <p>During our short term stay at the old Good Companion shop in Herne Hill we kindly ask you to make a donation to get the space off the ground.</p>
+    <p>During our short term stay at the old Good Companion shop in Herne Hill we kindly ask you to make a donation to get the space off the ground and for this you will become a member.</p>
+    <p>You must be 18 or over to join, and have a UK bank account from which we can take a direct debit. By joining South London Makerspace, you become a part of the company and agree to all the terms in our Articles of Association which you can read here.</p>
+    <p>It's a long and wordy legal document, but the important parts are:</p>
+    <ul>
+        <li>All funds must be used to further the aims of the company, that is "to promote and encourage creative, technical and scientific skills through social collaboration and education; and to provide and maintain shared community workspace and equipment in Greater London."</li>
+        <li>No member (including the Trustees) may take profit or remuneration from the company.</li>
+        <li>All members are liable for just £1 to be paid in the event that the company must be wound up.</li>
+    </ul>
+    <p><strong>The tl;dr of which is: your money will only be used for good, and you will never owe us more than a pound if we have to shut down.</strong></p>
     <p>We use a service called <a href="https://gocardless.com/">GoCardless</a> to handle the management of the payments for us. They will direct you through the process of setting up a direct debit. This will be used to debit money from your account on a monthly basis.</p>
     <div class="form-inline">
         <label for="donation">Amount (£)</label>
@@ -26,6 +34,15 @@
     
     <h3>Membership Direct Debit</h3>
     <p>To become a full member of the South London Makerspace a monthly payment must be made. As we are just starting up we hope you can put in whatever you can afford though long term we would like you to pay what you feel you get out of the space.</p>
+        <p>During our short term stay at the old Good Companion shop in Herne Hill we kindly ask you to make a donation to get the space off the ground and for this you will become a member.</p>
+    <p>You must be 18 or over to join, and have a UK bank account from which we can take a direct debit. By joining South London Makerspace, you become a part of the company and agree to all the terms in our Articles of Association which you can read here.</p>
+    <p>It's a long and wordy legal document, but the important parts are:</p>
+    <ul>
+        <li>All funds must be used to further the aims of the company, that is "to promote and encourage creative, technical and scientific skills through social collaboration and education; and to provide and maintain shared community workspace and equipment in Greater London."</li>
+        <li>No member (including the Trustees) may take profit or remuneration from the company.</li>
+        <li>All members are liable for just £1 to be paid in the event that the company must be wound up.</li>
+    </ul>
+    <p><strong>The tl;dr of which is: your money will only be used for good, and you will never owe us more than a pound if we have to shut down.</strong></p>
     <p>We use a service called <a href="https://gocardless.com/">GoCardless</a> to handle the management of the payments for us. They will direct you through the process of setting up a direct debit. This will be used to debit money from your account on a monthly basis.</p>
     {% if user.gc_subscription %}
         {% if user.next_payment() %}
