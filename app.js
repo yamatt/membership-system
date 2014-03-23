@@ -45,7 +45,28 @@ module.exports = {
                             user.gc_subscription = req.query.resource_id;
                             user.save(function (err, user) {
                                 if (!err) {
-                                    res.locals.flash("success", "Subscription created.", "Your subscription from GoCardless has been created. Waiting for payment.");
+                                    res.locals.flash("success", "Subscription created.", "Your subscription from GoCardless has been created. Thank you. Waiting for payment.");
+                                    res.redirect("/membership");
+                                }
+                                else {
+                                    console.log("Could not save entry because: " + err);
+                                    console.log("Data: " + user);
+                                    res.send(500, "Database error. This has been logged but please report the issue with the code SLME001");
+                                }
+                            });
+                        }
+                        else {
+                            res.locals.flash("danger", "Subscription failed.", "Your subscription from GoCardless could not be created as you are not logged in to this site. You may need to cancel your subscription with GoCardless and recreate it from this site making sure you are logged in.");
+                            console.log("User was not logged in when creating subscription: " + req.query.resource_id);
+                            res.redirect("/membership");
+                        }
+                    }
+                    else if (req.query.resource_type == "bill") {
+                        if (user) {
+                            user.gc_donation = req.query.resource_id;
+                            user.save(function (err, user) {
+                                if (!err) {
+                                    res.locals.flash("success", "Donation created.", "Your donation from GoCardless has been created. Thank you.");
                                     res.redirect("/membership");
                                 }
                                 else {
@@ -87,7 +108,7 @@ module.exports = {
                     res.redirect(url);
                 }
                 else {
-                    res.locals.flash("warning", "Subscription failed.", "Please enter a value greater than £" + config.gocardless.minimum + "."); // TODO: configurable currency symbol
+                    res.locals.flash("warning", "Subscription failed.", "Please enter a numeric value greater than £" + config.gocardless.minimum + "."); // TODO: configurable currency symbol
                 }
             }
             else if ((user) && (req.body.subscribe == "Cancel Payment") && (user.gc_subscription)) {
@@ -118,6 +139,24 @@ module.exports = {
                         console.log("something went very wrong when cancelling a subscription for user: " + user);
                     }
                 });
+            }
+            else if ((user) && (req.body.donate == "Donate")) {
+                if (parseFloat(req.body.donation)) {
+                    var url = gc.subscription.newUrl({
+                      amount: req.body.donation,
+                      interval_length: '1',
+                      interval_unit: 'month',
+                      name: 'South London Makerspace Herne Hill Donation',
+                      description: 'Donation for one of membership to Herne Hill.',
+                      user: {
+                          "email": user.email
+                      }
+                    });
+                    res.redirect(url);
+                }
+                else {
+                    res.locals.flash("warning", "Donation failed.", "Please enter a numeric value greater than £" + config.gocardless.minimum + "."); // TODO: configurable currency symbol
+                }
             }
             else if (user) {
                 // update user
