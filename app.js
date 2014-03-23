@@ -133,7 +133,7 @@ module.exports = {
                     }
                 });
             }
-            else if ((user) && (req.body.donate == "Donate")) {
+            else if ((user) && (req.body.donate == "Pay")) {
                 if (parseFloat(req.body.donation)) {
                     var url = gc.subscription.newUrl({
                       amount: req.body.donation,
