@@ -15,27 +15,6 @@
     </div>
     <button type="submit" class="btn btn-primary">Update</button>
     
-    <h3>One-off Membership Direct Debit</h3>
-    <p>During our short term stay at the old Good Companion shop in Herne Hill we kindly ask you to make a one-off membership payment to get the space off the ground for this two month period and for this you will become a member.</p>
-    <p>You must be 18 or over to join, and have a UK bank account from which we can take a direct debit. By joining South London Makerspace, you become a part of the company and agree to all the terms in <a href="http://southlondonmakerspace.org/wp-content/uploads/2014/03/slmsmemsandarts.pdf">our Articles of Association which you can read here (PDF)</a>.</p>
-    <p>It's a long and wordy legal document, but the important parts are:</p>
-    <ul>
-        <li>All funds must be used to further the aims of the company, that is "to promote and encourage creative, technical and scientific skills through social collaboration and education; and to provide and maintain shared community workspace and equipment in Greater London."</li>
-        <li>No member (including the Trustees) may take profit or remuneration from the company.</li>
-        <li>All members are liable for just £1 to be paid in the event that the company must be wound up.</li>
-    </ul>
-    <p><strong>The tl;dr of which is: your money will only be used for good, and you will never owe us more than a pound if we have to shut down.</strong></p>
-    <p>We use a service called <a href="https://gocardless.com/">GoCardless</a> to handle the management of the payments for us. They will direct you through the process of setting up a direct debit. This will be used to debit money from your account on a monthly basis.</p>
-    {% if not user.gc_donation %}
-    <div class="form-inline">
-        <label for="donation">Amount (£)</label>
-        <input type="number" id="donation" name="donation" placeholder="40.00" value="40.00" />
-        <input type="submit" class="btn btn-default" name="donate" value="Pay" />
-    </div>
-    {% else %}
-    <p><strong>Thank you for your payment.</strong></p>
-    {% endif %}
-    
     <h3>Membership Direct Debit</h3>
     <p>To become a full member of the South London Makerspace a monthly payment must be made. As we are just starting up we hope you can put in whatever you can afford though long term we would like you to pay what you feel you get out of the space.</p>
     <p>You must be 18 or over to join, and have a UK bank account from which we can take a direct debit. By joining South London Makerspace, you become a part of the company and agree to all the terms in <a href="">our Articles of Association which you can read here (PDF)</a>.</p>
@@ -66,10 +45,19 @@
     </div>
     {% endif %}
     
+    <h3>Access Card</h3>
+    <p>To access South London Makerspace you will need to link an RFID enabled access card to your account. Most people have this card already on their person in the form of an Oyster card, a contactless payment card or a work ID card or many other types of RFID enabled cards can be used.</p>
+    <p>You can manually enter the card ID below using an RFID reading device. Enter the ID with no spaces or separating characters.</p>
+    <div class="form-group">
+        <label for="card_id">Card ID</label>
+        <input type="text" name="card_id" id="card_id" value="{{ user.card_id }}" class="form-control" placeholder="123456AB">
+    </div>
+    
     <h3>Persona</h3>
     <p><a href="https://login.persona.org/about">Persona</a> is an authorisation system provided by Mozilla. <a href="https://login.persona.org/">Manage Persona</a> <small><a href="https://support.mozilla.org/en-US/kb/how-do-i-manage-my-persona-account">(help)</a></small></p>
     <p>Be aware that changing your e-mail is not currently supported and you may lose access to your account.</p>
     <p>Your current e-mail address in use is: <b>{{ email }}</b></p>
+    
     <p></p>
 </form>
 {% endblock %}
