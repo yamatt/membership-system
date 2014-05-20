@@ -133,24 +133,6 @@ module.exports = {
                     }
                 });
             }
-            else if ((user) && (req.body.donate == "Pay")) {
-                if (parseFloat(req.body.donation)) {
-                    var url = gc.bill.newUrl({
-                      amount: req.body.donation,
-                      interval_length: '1',
-                      interval_unit: 'month',
-                      name: 'South London Makerspace Herne Hill Donation',
-                      description: 'Donation for one of membership to Herne Hill.',
-                      user: {
-                          "email": user.email
-                      }
-                    });
-                    res.redirect(url);
-                }
-                else {
-                    res.locals.flash("warning", "Donation failed.", "Please enter a numeric value greater than £" + config.gocardless.minimum + "."); // TODO: configurable currency symbol
-                }
-            }
             else if (user) {
                 // update user
                 var user = res.locals.user;
@@ -179,7 +161,7 @@ module.exports = {
                     }
                 });
             }
-            else {
+            else if (req.session.email) {
                 // create user
                 res.locals.User.create({
                     email: req.session.email,
