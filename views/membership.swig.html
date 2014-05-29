@@ -1,6 +1,6 @@
 {% extends '../../../views/base.swig.html' %}
 {% block content %}
-<h2>Account Details</h2>
+<h2>Membership Details</h2>
 <form method="POST" role="form">
     <input type="hidden" name="_csrf" value="{{ token }}" />
     <h3>Personal Details</h3>
@@ -44,12 +44,6 @@
         <input type="submit" class="btn btn-default" name="subscribe" value="Become Member" />
     </div>
     {% endif %}
-    
-    <h3>Persona</h3>
-    <p><a href="https://login.persona.org/about">Persona</a> is an authorisation system provided by Mozilla. <a href="https://login.persona.org/">Manage Persona</a> <small><a href="https://support.mozilla.org/en-US/kb/how-do-i-manage-my-persona-account">(help)</a></small></p>
-    <p>Be aware that changing your e-mail is not currently supported and you may lose access to your account.</p>
-    <p>Your current e-mail address in use is: <b>{{ email }}</b></p>
-    <p></p>
 </form>
 {% endblock %}
 
