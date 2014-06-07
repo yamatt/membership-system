@@ -71,7 +71,7 @@ module.exports = {
                         }
                         else {
                             res.locals.flash("success", "Subscription failed.", "Created bill appears to be something other than a subscription.");
-                            console.log("User '" + user + "'attemped to create something other than a subscription: " + req.query.resource_id);
+                            console.log("User '" + user + "'attempted to create something other than a subscription: " + req.query.resource_id);
                             res.redirect("/membership");
                         }
                     }
